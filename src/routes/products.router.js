@@ -48,7 +48,7 @@ productsRouter.post('/', (req, res) => {
   if (!newProduct.title || !newProduct.description || !newProduct.code || !newProduct.price || !newProduct.stock || !newProduct.category) {
     res.status(400).send('Faltan campos obligatorios en la solicitud');
   } else {
-    // Generar un nuevo ID (esto depende de cómo estás generando los IDs)
+    // Generar un nuevo ID 
     newProduct.id = generateNewProductId();
     newProduct.status = true; // Status es true por defecto
     products.push(newProduct);
@@ -95,7 +95,7 @@ async function saveProductsToFile() {
   }
 }
 
-// Genera un nuevo ID (esto es un ejemplo, puedes ajustarlo según tu necesidad)
+// Genera un nuevo ID 
 function generateNewProductId() {
   const maxId = Math.max(...products.map(p => p.id), 0);
   return maxId + 1;

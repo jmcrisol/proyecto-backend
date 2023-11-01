@@ -32,7 +32,7 @@ cartsRouter.get('/:cid', (req, res) => {
 cartsRouter.post('/:cid/product/:pid', (req, res) => {
   const cartId = req.params.cid;
   const productId = req.params.pid;
-  const quantity = 1; // Por ahora, se agrega un producto de uno en uno
+  const quantity = 1; //se agrega un producto de uno en uno
 
   const cart = loadCart(cartId); // Cargar el carrito desde el sistema de archivos
 
@@ -44,7 +44,7 @@ cartsRouter.post('/:cid/product/:pid', (req, res) => {
       // Si el producto ya existe, incrementa la cantidad
       existingProduct.quantity += quantity;
     } else {
-      // Si el producto no existe, agrégalo al carrito
+      // Si el producto no existe, se agrega al carrito
       cart.products.push({ product: productId, quantity });
     }
 
@@ -75,7 +75,7 @@ function getLastCartId() {
 // Función para generar un ID único para el carrito
 function generateCartId() {
   lastCartId++; // Incrementa el último ID
-  return lastCartId.toString(); // Convierte el ID a cadena (puede ser número o cadena, según tu preferencia)
+  return lastCartId.toString(); // Convierte el ID a cadena 
 }
 
 
