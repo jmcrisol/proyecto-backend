@@ -1,14 +1,14 @@
-import express from 'express';
+import { Router } from 'express';
 import { promises as fs } from 'fs';
 
-const productsRouter = express.Router();
+const productsRouter = Router();
 
 // Leer el archivo JSON
 let products = [];
 
 async function readProductsFile() {
   try {
-    const data = await fs.readFile('./products.json', 'utf8');
+    const data = await fs.readFile('./src/products.json', 'utf8');
     products = JSON.parse(data);
   } catch (err) {
     console.error('Error al leer el archivo JSON:', err);
@@ -29,7 +29,6 @@ productsRouter.get('/', (req, res) => {
     }
   });
 
-
 // Ruta para traer un producto por ID
 productsRouter.get('/:pid', (req, res) => {
   const productId = req.params.pid;
@@ -48,7 +47,7 @@ productsRouter.post('/', (req, res) => {
   if (!newProduct.title || !newProduct.description || !newProduct.code || !newProduct.price || !newProduct.stock || !newProduct.category) {
     res.status(400).send('Faltan campos obligatorios en la solicitud');
   } else {
-    // Generar un nuevo ID 
+    // Generar un nuevo ID
     newProduct.id = generateNewProductId();
     newProduct.status = true; // Status es true por defecto
     products.push(newProduct);
@@ -89,13 +88,13 @@ productsRouter.delete('/:pid', (req, res) => {
 // Función para guardar los productos en el archivo
 async function saveProductsToFile() {
   try {
-    await fs.writeFile('./products.json', JSON.stringify(products, null, 2), 'utf8');
+    await fs.writeFile('./src/products.json', JSON.stringify(products, null, 2), 'utf8');
   } catch (err) {
     console.error('Error al guardar en el archivo JSON:', err);
   }
 }
 
-// Genera un nuevo ID 
+// Genera un nuevo ID
 function generateNewProductId() {
   const maxId = Math.max(...products.map(p => p.id), 0);
   return maxId + 1;
