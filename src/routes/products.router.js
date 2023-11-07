@@ -8,7 +8,7 @@ let products = [];
 
 async function readProductsFile() {
   try {
-    const data = await fs.readFile('./src/products.json', 'utf8');
+    const data = await fs.readFile('./src/data/products.json', 'utf8');
     products = JSON.parse(data);
   } catch (err) {
     console.error('Error al leer el archivo JSON:', err);
@@ -43,34 +43,56 @@ productsRouter.get('/:pid', (req, res) => {
 // Ruta para agregar un nuevo producto
 productsRouter.post('/', (req, res) => {
   const newProduct = req.body;
-  // Validar que todos los campos obligatorios estén presentes
-  if (!newProduct.title || !newProduct.description || !newProduct.code || !newProduct.price || !newProduct.stock || !newProduct.category) {
-    res.status(400).send('Faltan campos obligatorios en la solicitud');
+
+  // Validar que todos los campos obligatorios estén presentes y tengan el tipo de dato correcto
+  if (
+    !newProduct.title ||
+    !newProduct.description ||
+    !newProduct.code ||
+    typeof newProduct.price !== 'number' ||
+    typeof newProduct.status !== 'boolean' ||
+    typeof newProduct.stock !== 'number' ||
+    !newProduct.category ||
+    !Array.isArray(newProduct.thumbnails)
+  ) {
+    res.status(400).send('Faltan campos obligatorios o los tipos de datos son incorrectos en la solicitud');
   } else {
     // Generar un nuevo ID
     newProduct.id = generateNewProductId();
-    newProduct.status = true; // Status es true por defecto
     products.push(newProduct);
     saveProductsToFile();
     res.status(201).json(newProduct);
   }
 });
 
+
 // Ruta para actualizar un producto por ID
 productsRouter.put('/:pid', (req, res) => {
-  const productId = req.params.pid;
+  const productId = parseInt(req.params.pid); // Convertir el ID de cadena a número
   const updatedProduct = req.body;
-  const existingProductIndex = products.findIndex(p => p.id == productId);
+  const existingProductIndex = products.findIndex(p => p.id === productId);
+
   if (existingProductIndex !== -1) {
-    // No actualizar el ID
-    updatedProduct.id = productId;
-    products[existingProductIndex] = updatedProduct;
+    const existingProduct = products[existingProductIndex];
+
+    // Recorre las propiedades del objeto actualizado y actualiza solo las coincidencias
+    for (const key in updatedProduct) {
+      if (key in existingProduct) {
+        existingProduct[key] = updatedProduct[key];
+      }
+    }
+
+    // Asegúrate de que el ID no se actualice
+    existingProduct.id = productId;
+
     saveProductsToFile();
-    res.json(updatedProduct);
+    res.json(existingProduct);
   } else {
     res.status(404).send('Producto no encontrado');
   }
 });
+
+
 
 // Ruta para eliminar un producto por ID
 productsRouter.delete('/:pid', (req, res) => {
@@ -88,7 +110,7 @@ productsRouter.delete('/:pid', (req, res) => {
 // Función para guardar los productos en el archivo
 async function saveProductsToFile() {
   try {
-    await fs.writeFile('./src/products.json', JSON.stringify(products, null, 2), 'utf8');
+    await fs.writeFile('./src/data/products.json', JSON.stringify(products, null, 2), 'utf8');
   } catch (err) {
     console.error('Error al guardar en el archivo JSON:', err);
   }

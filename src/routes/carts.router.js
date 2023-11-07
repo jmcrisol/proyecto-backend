@@ -6,7 +6,7 @@ const cartsRouter = Router();
 // Función para cargar carritos desde el sistema de archivos
 function loadCarts() {
   try {
-    const cartData = fs.readFileSync('./src/carrito.json', 'utf8');
+    const cartData = fs.readFileSync('./src/data/carrito.json', 'utf8');
     const carts = JSON.parse(cartData);
     return Array.isArray(carts) ? carts : []; // Asegurarse de que sea un array
   } catch (err) {
@@ -18,19 +18,20 @@ function loadCarts() {
 // Función para guardar carritos en el sistema de archivos
 function saveCarts(carts) {
   const cartData = JSON.stringify(carts, null, 2);
-  fs.writeFileSync('./src/carrito.json', cartData, 'utf8');
+  fs.writeFileSync('./src/data/carrito.json', cartData, 'utf8');
 }
 
 // Función para generar un ID único para el carrito
 function generateCartId() {
   lastCartId = getLastCartId() + 1; // Obtener el último ID y luego incrementarlo
-  return lastCartId.toString();
+  return lastCartId;
 }
 
-// Función para obtener el último ID de carrito guardado en './carrito.json'
+
+// Función para obtener el último ID de carrito guardado 
 function getLastCartId() {
   try {
-    const cartData = fs.readFileSync('./src/carrito.json', 'utf8');
+    const cartData = fs.readFileSync('./src/data/carrito.json', 'utf8');
     const carts = JSON.parse(cartData);
 
     // Obtener el último carrito y su ID
@@ -46,9 +47,9 @@ function getLastCartId() {
   }
 }
 
-// Ruta raíz POST / para crear un nuevo carrito y acumularlo con los existentes
+// Ruta raíz POST / para crear un nuevo carrito y agregarlo a los existentes
 cartsRouter.post('/', (req, res) => {
-  // Cargar carritos existentes desde el sistema de archivos
+  // Cargar carritos existentes desde el JSON
   const existingCarts = loadCarts();
 
   const newCart = {
@@ -58,10 +59,10 @@ cartsRouter.post('/', (req, res) => {
 
   // Asegurarse de que existingCarts sea un array
   if (Array.isArray(existingCarts)) {
-    // Agregar el nuevo carrito a la lista de carritos existentes
+    // Agregar el nuevo carrito a la lista de carritos 
     existingCarts.push(newCart);
 
-    // Guardar la lista actualizada de carritos en el sistema de archivos
+    // Guardar la lista actualizada de carritos en el JSON
     saveCarts(existingCarts);
   } else {
     console.error('existingCarts no es un array');
@@ -70,9 +71,9 @@ cartsRouter.post('/', (req, res) => {
   res.status(201).json(existingCarts); // Devolver todos los carritos, incluido el nuevo
 });
 
-// Ruta GET /:cid para listar los productos en un carrito específico
+// Ruta GET /:cid para mostrar los productos en un carrito específico
 cartsRouter.get('/:cid', (req, res) => {
-  const cartId = req.params.cid;
+  const cartId = parseInt(req.params.cid);
   const cart = loadCart(cartId);
 
   if (cart) {
@@ -84,28 +85,52 @@ cartsRouter.get('/:cid', (req, res) => {
 
 // Ruta POST /:cid/product/:pid para agregar un producto a un carrito
 cartsRouter.post('/:cid/product/:pid', (req, res) => {
-  const cartId = req.params.cid;
-  const productId = req.params.pid;
+  const cartId = parseInt(req.params.cid);
+  const productId = parseInt(req.params.pid); 
+
+  if (isNaN(productId)) {
+    res.status(400).json({ message: 'El ID de producto no es un número válido' });
+    return;
+  }
+
   const quantity = 1;
 
-  const cart = loadCart(cartId);
+  // Cargar los carritos existentes
+  const existingCarts = loadCarts();
+  const cart = existingCarts.find((c) => c.id === cartId);
 
   if (cart) {
-    const existingProduct = cart.products.find((product) => product.product === productId);
+    // Cargar los productos desde el JSON
+    const productData = fs.readFileSync('./src/data/products.json', 'utf8');
+    const products = JSON.parse(productData);
 
-    if (existingProduct) {
-      existingProduct.quantity += quantity;
+    // Verificar si el producto con el ID existe
+    const productToAdd = products.find((product) => product.id === productId);
+
+    if (productToAdd) {
+      // Verificar si el producto ya existe en el carrito
+      const existingProduct = cart.products.find((product) => product.product === productId);
+
+      if (existingProduct) {
+        // Si el producto ya existe, suma la cantidad
+        existingProduct.quantity += quantity;
+      } else {
+        // Si el producto no existe en el carrito, agrega el producto al carrito
+        cart.products.push({ product: productId, quantity });
+      }
+
+      // Guarda el carrito actualizado en la lista de carritos
+      saveCarts(existingCarts);
+
+      res.status(201).json(cart);
     } else {
-      cart.products.push({ product: productId, quantity });
+      res.status(404).json({ message: 'Producto no encontrado' });
     }
-
-    saveCart(cart);
-
-    res.status(201).json(cart);
   } else {
     res.status(404).json({ message: 'Carrito no encontrado' });
   }
-})
+});
+
 
 // Variable para mantener el último ID de carrito asignado
 let lastCartId = getLastCartId();

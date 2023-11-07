@@ -150,18 +150,17 @@
     ]
   },
   {
-    "title": "MODIFICADO",
-    "description": "Este es un producto de ejemplo",
-    "price": 55555,
-    "thumbnail": "Sin imagen",
-    "code": "xyz123",
-    "stock": 70,
+    "title": "PRODUCTO MODIFICADO",
+    "description": "Descripción del Producto 2",
+    "code": "P456",
+    "price": 49.99,
     "status": true,
-    "category": "Categoría 4",
+    "stock": 50,
+    "category": "Ropa",
     "thumbnails": [
-      "ruta_imagen_ejemplo_1.jpg",
-      "ruta_imagen_ejemplo_2.jpg"
+      "ruta/imagen3.jpg",
+      "ruta/imagen4.jpg"
     ],
-    "id": "12"
+    "id": 12
   }
 ]
