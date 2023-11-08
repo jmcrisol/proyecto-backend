@@ -122,4 +122,5 @@ function generateNewProductId() {
   return maxId + 1;
 }
 
+
 export default productsRouter;
