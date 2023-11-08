@@ -6,7 +6,6 @@ import handlebars from "express-handlebars";
 import {Server} from "socket.io";
 import viewRouter from "./routes/views.router.js";
 import homeRouter from './routes/home.router.js';
-import realtimeProductsRouter from './routes/realtimeproducts.router.js';
 import realtimeproducts from './routes/realtimeproducts.router.js';
 
 const app = express();
