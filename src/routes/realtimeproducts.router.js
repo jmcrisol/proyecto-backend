@@ -7,8 +7,7 @@ realtimeproducts.get('/', async (req, res) => {
     try {
         const data = await readFile('./src/data/products.json', 'utf8');
         const products = JSON.parse(data);
-
-        res.render('layouts/realTimeProducts', { products });
+        res.render('layouts/realtimeProducts', { products });
     } catch (err) {
         console.error(err);
         res.status(500).send('Error al cargar los productos.');

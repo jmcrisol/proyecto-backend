@@ -162,5 +162,20 @@
       "ruta/imagen4.jpg"
     ],
     "id": 12
+  },
+  {
+    "title": "producto POST",
+    "description": "Este es un producto POST",
+    "price": 750,
+    "thumbnail": "Sin imagen",
+    "code": "vbn890",
+    "stock": 65,
+    "status": true,
+    "category": "Categoría 2",
+    "thumbnails": [
+      "ruta_imagen_10_1.jpg",
+      "ruta_imagen_10_2.jpg"
+    ],
+    "id": 13
   }
 ]

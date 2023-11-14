@@ -7,6 +7,7 @@ import {Server} from "socket.io";
 import viewRouter from "./routes/views.router.js";
 import homeRouter from './routes/home.router.js';
 import realtimeproducts from './routes/realtimeproducts.router.js';
+import path from 'path';
 
 const app = express();
 const port = 8080;
@@ -17,11 +18,11 @@ const io = new Server(httpServer)
 
 
 app.engine('handlebars', handlebars.engine());
-app.set('views', `${__dirname}/views`);
+app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'handlebars');
 app.use(express.static(__dirname + '/public'));
 app.use('/', viewRouter);
-app.use('/realtimeproducts', viewRouter);
+
 
 io.on('connection', (socket) => {
     console.log('Un cliente se ha conectado');
