@@ -8,6 +8,8 @@ import viewRouter from "./routes/views.router.js";
 import homeRouter from './routes/home.router.js';
 import realtimeproducts from './routes/realtimeproducts.router.js';
 import path from 'path';
+import mongoose from 'mongoose';
+
 
 const app = express();
 const port = 8080;
@@ -16,9 +18,21 @@ const httpServer = app.listen(port, ()=>{ console.log(`Servidor Express escuchan
 app.use(express.json());
 const io = new Server(httpServer)
 
+// async function connectToDatabase() {
+//     try {
+//       await mongoose.connect('mongodb+srv://admin:admin@ecommerce.i3p9ffy.mongodb.net/?retryWrites=true&w=majority');
+//       console.log('Conexión exitosa a la base de datos');
+//     } catch (error) {
+//       console.error('Error de conexión a la base de datos:', error);
+//       process.exit(1);
+//     }
+//   }
+  
+//   connectToDatabase();
+
 
 app.engine('handlebars', handlebars.engine());
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', __dirname+'/views');
 app.set('view engine', 'handlebars');
 app.use(express.static(__dirname + '/public'));
 app.use('/', viewRouter);
