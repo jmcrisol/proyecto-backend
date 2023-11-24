@@ -1,5 +1,5 @@
 import express from 'express';
-import connectToDatabase from '../dao/connect.js';
+import connectToDatabase from '../config/connect.js';
 const router = express.Router();
 
 connectToDatabase();
