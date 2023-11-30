@@ -1,18 +1,18 @@
 import mongoose from 'mongoose';
 
 const { Schema, model } = mongoose;
-const cartsColletion = 'Carts';
+const cartsColletion = 'carts';
 
 
 const cartsSchema = new Schema({
-    id: Number,
+    // id: Number,
     products:{
-        type:Array,
+        type: Array,
         default:[]
     }
 });
 
 
-const Carts = model(cartsColletion, cartsSchema);
+const cartsModel = model(cartsColletion, cartsSchema);
 
-export default Carts;
+export default cartsModel;

@@ -1,10 +1,23 @@
 import { Router } from 'express';
 import { promises as fs } from 'fs';
+import Products from '../dao/models/products.model.js';
 
 const productsRouter = Router();
 
 // Leer el archivo JSON
 let products = [];
+
+productsRouter.get("/", async (req, res) => {
+
+  try {
+    let product = await Products.find();
+    res.json(product);
+  } catch (error) {
+    console.log("Error fetching data from MongoDB:", error);
+    res.status(500).send({ result: "error", error: error.message });
+  }
+});
+
 
 async function readProductsFile() {
   try {
@@ -18,16 +31,16 @@ async function readProductsFile() {
 readProductsFile(); // Lee el archivo al inicio
 
 // Ruta para listar todos los productos con límite
-productsRouter.get('/', (req, res) => {
-    const limit = parseInt(req.query.limit, 10); // Parsea el parámetro 'limit' a un número entero
-    if (isNaN(limit) || limit <= 0) {
-      // Si 'limit' no es un número válido o es menor o igual a 0, muestra todos los productos
-      res.json(products);
-    } else {
-      // Muestra la cantidad limitada de productos
-      res.json(products.slice(0, limit));
-    }
-  });
+// productsRouter.get('/', (req, res) => {
+//     const limit = parseInt(req.query.limit, 10); // Parsea el parámetro 'limit' a un número entero
+//     if (isNaN(limit) || limit <= 0) {
+//       // Si 'limit' no es un número válido o es menor o igual a 0, muestra todos los productos
+//       res.json(products);
+//     } else {
+//       // Muestra la cantidad limitada de productos
+//       res.json(products.slice(0, limit));
+//     }
+//   });
 
 // Ruta para traer un producto por ID
 productsRouter.get('/:pid', (req, res) => {
@@ -124,3 +137,5 @@ function generateNewProductId() {
 
 
 export default productsRouter;
+
+

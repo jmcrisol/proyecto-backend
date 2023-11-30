@@ -1,19 +1,32 @@
 import { Router } from 'express';
 import fs from 'fs';
+// import { loadCarts } from "../controllers/cartsController.js";
+import cartsModel from '../dao/models/carts.model.js';
 
 const cartsRouter = Router();
 
-// Función para cargar carritos desde el sistema de archivos
-function loadCarts() {
+cartsRouter.get("/", async (req, res) => {
   try {
-    const cartData = fs.readFileSync('./src/data/carrito.json', 'utf8');
-    const carts = JSON.parse(cartData);
-    return Array.isArray(carts) ? carts : []; // Asegurarse de que sea un array
-  } catch (err) {
-    console.error('Error al cargar los carritos desde el sistema de archivos', err);
-    return [];
+    let carts = await cartsModel.find();
+    res.send({ result: "success", payload: carts });
+  } catch (error) {
+    console.log("Error fetching data from MongoDB:", error);
+    res.status(500).send({ result: "error", error: error.message });
   }
-}
+});
+
+
+// // Función para cargar carritos desde el sistema de archivos
+// function loadCarts() {
+//   try {
+//     const cartData = fs.readFileSync('./src/data/carrito.json', 'utf8');
+//     const carts = JSON.parse(cartData);
+//     return Array.isArray(carts) ? carts : []; // Asegurarse de que sea un array
+//   } catch (err) {
+//     console.error('Error al cargar los carritos desde el sistema de archivos', err);
+//     return [];
+//   }
+// }
 
 // Función para guardar carritos en el sistema de archivos
 function saveCarts(carts) {
