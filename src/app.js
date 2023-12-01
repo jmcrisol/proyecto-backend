@@ -13,7 +13,6 @@ import messageModel from './dao/models/messages.model.js';
 
 const app = express();
 const port = 8080;
-
 const httpServer = app.listen(port, ()=>{ console.log(`Servidor Express escuchando en el puerto http://localhost:${port}`)});
 app.use(express.json());
 const io = new Server(httpServer)
@@ -25,6 +24,18 @@ app.set('view engine', 'handlebars');
 app.use(express.static(__dirname + '/public'));
 app.use('/', viewRouter);
 
+// Conectar los routers a las rutas principales
+app.use('/api/products', productsRouter);
+app.use('/api/carts', cartsRouter);
+app.use('/home', homeRouter);
+app.use('/realtimeproducts', realtimeproducts);
+app.use('/chat', chatRouter);
+
+
+//Mensaje para cuelquier ruta erronea
+app.use((req, res) => {
+    res.status(404).send('Lo siento, no puedo encontrar lo que estás buscando.');
+}); 
 
 io.on('connection', (socket) => {
     console.log('Un cliente se ha conectado');
@@ -61,20 +72,4 @@ io.on('connection', (socket) => {
 });
 
 
-// Conectar los routers a las rutas principales
-app.use('/api/products', productsRouter);
-app.use('/api/carts', cartsRouter);
-app.use('/home', homeRouter);
-app.use('/realtimeproducts', realtimeproducts);
-app.use('/chat', chatRouter);
-
-
-//Mensaje para cuelquier ruta erronea
-app.use((req, res) => {
-    res.status(404).send('Lo siento, no puedo encontrar lo que estás buscando.');
-}); 
-
-// app.listen(port, () => {
-//   console.log(`Servidor Express escuchando en el puerto http://localhost:${port}`);
-// });
 
