@@ -14,7 +14,7 @@ import messageModel from './dao/models/messages.model.js';
 const app = express();
 const port = 8080;
 
-const httpServer = app.listen(port, ()=>{ console.log(`Servidor Express escuchando en el puerto ${port}`)});
+const httpServer = app.listen(port, ()=>{ console.log(`Servidor Express escuchando en el puerto http://localhost:${port}`)});
 app.use(express.json());
 const io = new Server(httpServer)
 
