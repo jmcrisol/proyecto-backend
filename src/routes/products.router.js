@@ -8,15 +8,25 @@ const productsRouter = Router();
 let products = [];
 
 productsRouter.get("/", async (req, res) => {
-
   try {
-    let product = await Products.find();
-    res.json(product);
+    let productList = await Products.find();
+    res.send({ result: "success", payload: productList });
   } catch (error) {
     console.log("Error fetching data from MongoDB:", error);
     res.status(500).send({ result: "error", error: error.message });
   }
 });
+
+// productsRouter.get("/", async (req, res) => {
+
+//   try {
+//     let product = await Products.find();
+//     res.json(product);
+//   } catch (error) {
+//     console.log("Error fetching data from MongoDB:", error);
+//     res.status(500).send({ result: "error", error: error.message });
+//   }
+// });
 
 
 async function readProductsFile() {
