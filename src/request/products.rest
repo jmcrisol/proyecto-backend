@@ -1,0 +1,63 @@
+### Mostrar todas los produtos
+GET http://localhost:8080/api/products/
+
+
+
+### Mostrar la lista de los produtos con un limite
+GET http://localhost:8080/api/products/?limit=5
+
+
+
+### Mostrar solo el producto ID:656809e92d719ce1cd4df438
+GET http://localhost:8080/api/products/656809e92d719ce1cd4df438
+
+
+
+### Crear nuevo producto
+POST http://localhost:8080/api/products/ 
+Content-Type: application/json
+
+{
+  "title": "Nuevo Producto",
+  "description": "Descripción del nuevo producto",
+  "price": 19.99,
+  "thumbnail": "URL de la imagen",
+  "code": "ABC123",
+  "stock": 10,
+  "status": true,
+  "category": "Electrónica",
+  "thumbnails": ["URL1", "URL2"]
+}
+
+
+
+### Crear nuevo producto con error
+POST http://localhost:8080/api/products/ 
+Content-Type: application/json
+
+{
+  "title": "Nuevo Producto",
+  "thumbnails": ["URL1", "URL2"]
+}
+
+### Modificar Producto por ID
+PUT http://localhost:8080/api/products/656fbb5e1cf466f4bb89fac4 
+Content-Type: application/json
+
+{
+  "price": 1.99,
+  "stock": 15
+}
+
+### Modificar Producto por ID -- ERROR
+PUT http://localhost:8080/api/products/656fbb5e1cf466f4bb89fac4 
+Content-Type: application/json
+
+{
+    "_id": "121212",
+    "price": 29999.99,
+    "stock": 150000
+}
+
+### Eliminar producto por ID
+DELETE http://localhost:8080/api/products/656809e92d719ce1cd4df437

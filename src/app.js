@@ -7,17 +7,17 @@ import handlebars from "express-handlebars";
 import {Server} from "socket.io";
 import viewRouter from "./routes/views.router.js";
 import homeRouter from './routes/home.router.js';
-import realtimeproducts from './routes/realtimeproducts.router.js';
+import realtimeProducts from './routes/realtimeproducts.router.js';
 import messageModel from './dao/models/messages.model.js';
 
 
 const app = express();
 const port = 8080;
 const httpServer = app.listen(port, ()=>{ console.log(`Servidor Express escuchando en el puerto http://localhost:${port}`)});
-app.use(express.json());
 const io = new Server(httpServer)
 
 
+app.use(express.json());
 app.engine('handlebars', handlebars.engine());
 app.set('views', __dirname+'/views');
 app.set('view engine', 'handlebars');
@@ -28,7 +28,7 @@ app.use('/', viewRouter);
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
 app.use('/home', homeRouter);
-app.use('/realtimeproducts', realtimeproducts);
+app.use('/realtimeproducts', realtimeProducts);
 app.use('/chat', chatRouter);
 
 
@@ -39,6 +39,8 @@ app.use((req, res) => {
 
 io.on('connection', (socket) => {
     console.log('Un cliente se ha conectado');
+
+   io.emit('realtimeProducts',)
 
     socket.on('message', async (data) => {
         try {

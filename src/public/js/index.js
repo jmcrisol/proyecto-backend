@@ -2,6 +2,7 @@ const socket = io();
 let user;
 let chatBox = document.getElementById('chatBox')
 
+
 socket.on('messageLogs', (data) => {
     let log = document.getElementById('messageLogs');
     let messages = "";

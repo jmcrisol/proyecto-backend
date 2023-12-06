@@ -1,18 +1,8 @@
 import express from 'express';
-import { readFile } from 'fs/promises';
+import { realtimeProducts } from "../controllers/realtimeproductsController.js";
 
-const realtimeproducts = express.Router();
+const realtimeProductsRouter = express.Router();
 
-realtimeproducts.get('/', async (req, res) => {
-    try {
-        const data = await readFile('./src/data/products.json', 'utf8');
-        const products = JSON.parse(data);
-        res.render('layouts/realtimeProducts', { products });
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Error al cargar los productos.');
-    }
-});
+realtimeProductsRouter.get('/', realtimeProducts);
 
-
-export default realtimeproducts;
+export default realtimeProductsRouter;

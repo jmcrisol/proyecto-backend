@@ -1,0 +1,16 @@
+###Mostrar todas las carts
+GET http://localhost:8080/api/carts 
+
+###Buscar por ID 656929fe2826d76358747bc7
+GET http://localhost:8080/api/carts/656929fe2826d76358747bc7
+
+###Crear nuevo carrito
+POST http://localhost:8080/api/carts/
+
+###Agregar un producto por id al carrito
+POST http://localhost:8080/api/carts/656929fe2826d76358747bc7/product/656809e92d719ce1cd4df42e
+Content-Type: application/json
+
+{
+  "quantity": 4
+}
