@@ -77,6 +77,82 @@ export const getProducts = async (req, res) => {
     }
 };
 
+export const getListProducts = async (req, res) => {
+    try {
+        const { limit = 10, page = 1, sort, query } = req.query;
+        const limitInt = parseInt(limit);
+        const pageInt = parseInt(page);
+
+        let aggregateOptions = [];
+
+        // Manejar la búsqueda por categoría o disponibilidad
+        if (query) {
+            let matchQuery;
+            if (query.toLowerCase() === 'disponible') {
+                matchQuery = { stock: { $gt: 0 } };
+            } else if (query.toLowerCase() === 'nodisponible') {
+                matchQuery = { stock: 0 };
+            } else {
+                matchQuery = { category: query };
+            }
+
+            aggregateOptions.push({
+                $match: matchQuery,
+            });
+        }
+
+        // Agregar la lógica para sort en la agregación
+        if (sort) {
+            const sortOrder = sort === 'desc' ? -1 : 1;
+            aggregateOptions.push({
+                $sort: { price: sortOrder },
+            });
+        }
+
+        // Agregar la lógica para paginación en la agregación
+        aggregateOptions.push({
+            $facet: {
+                metadata: [{ $count: 'total' }],
+                data: [
+                    { $skip: (pageInt - 1) * limitInt },
+                    { $limit: limitInt },
+                ],
+            },
+        });
+
+        // Ejecutar la agregación
+        const result = await productsModel.aggregate(aggregateOptions);
+
+        const metadata = result[0].metadata[0];
+        const productList = result[0].data;
+
+        // Definir la información de paginación
+        const paginationInfo = {
+            totalPages: Math.ceil(metadata.total / limitInt),
+            prevPage: pageInt > 1 ? pageInt - 1 : null,
+            nextPage: pageInt < Math.ceil(metadata.total / limitInt) ? pageInt + 1 : null,
+            page: pageInt,
+            hasPrevPage: pageInt > 1,
+            hasNextPage: pageInt < Math.ceil(metadata.total / limitInt),
+            prevLink: pageInt > 1 ? `${req.baseUrl}?page=${pageInt - 1}&limit=${limitInt}` : null,
+            nextLink: pageInt < Math.ceil(metadata.total / limitInt) ? `${req.baseUrl}?page=${pageInt + 1}&limit=${limitInt}` : null,
+        };
+
+        res.render('layouts/products', {
+            products: productList,
+            pagination: paginationInfo
+        });
+
+        
+
+  
+
+    } catch (error) {
+        console.log('Error fetching data from MongoDB:', error);
+        res.status(500).send({ status: 'error', error: error.message });
+    }
+};
+
 
 export const getProductById = async (req, res) => {
     try {

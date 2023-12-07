@@ -23,8 +23,22 @@ export const loadCartsId = async (req, res) => {
       // Si no hay cid, obtener todos los carritos
       carts = await cartsModel.find();
     }
-    res.render('layouts/cart', { carts });
+    
     res.send({ result: "success", payload: carts });
+   
+  } catch (error) {
+    console.log("Error fetching data from MongoDB:", error);
+    res.status(500).send({ result: "error", error: error.message });
+  }
+};
+
+export const renderCartsId = async (req, res) => {
+  try {
+    const { cid } = req.params; // Obtener el parámetro cid de la URL
+    let carts = await cartsModel.findById(cid);
+  
+
+    res.render('layouts/cart', { carts });
    
   } catch (error) {
     console.log("Error fetching data from MongoDB:", error);

@@ -9,6 +9,8 @@ import viewRouter from "./routes/views.router.js";
 import homeRouter from './routes/home.router.js';
 import realtimeProducts from './routes/realtimeproducts.router.js';
 import messageModel from './dao/models/messages.model.js';
+import productsListRouter from './routes/productsList.router.js';
+import cartsIdRouter from './routes/cartsId.router.js';
 
 
 const app = express();
@@ -30,6 +32,8 @@ app.use('/api/carts', cartsRouter);
 app.use('/home', homeRouter);
 app.use('/realtimeproducts', realtimeProducts);
 app.use('/chat', chatRouter);
+app.use('/products', productsListRouter);
+app.use('/carts', cartsIdRouter);
 
 
 //Mensaje para cuelquier ruta erronea

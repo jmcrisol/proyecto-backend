@@ -3,8 +3,8 @@
 {{#if carts}}
   {{#each carts.products}}
     <div class="product">
-      <h2>{{this.productId.title}}</h2>
-      <p>Precio: ${{this.productId.price}}</p>
+      <h2>{{this.productId}}</h2>
+      <!-- Agrega otras propiedades de productId según sea necesario -->
       <p>Cantidad: {{this.quantity}}</p>
     </div>
   {{/each}}
