@@ -42,6 +42,21 @@ io.on('connection', (socket) => {
 
    io.emit('realtimeProducts',)
 
+//    socket.on('product', async (data) => {
+//     try {
+//         // Guardar el mensaje en MongoDB
+//         const listProducts = new productsModel(data);
+
+//         // Obtener el historial de mensajes actualizado
+//         const products = await productsModel.find({});
+        
+//         // Emitir el historial de mensajes actualizado a todos los clientes
+//         io.emit('realtimeProducts', products || []); // Enviar un array vacío si no hay mensajes
+//     } catch (error) {
+//         console.error(error);
+//     }
+// });
+
     socket.on('message', async (data) => {
         try {
             // Guardar el mensaje en MongoDB

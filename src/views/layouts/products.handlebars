@@ -1,0 +1,35 @@
+<h1>Listado de Productos</h1>
+ <!-- Paginación (suponiendo que tienes información de paginación en tu respuesta) -->
+    {{#if pagination}}
+        <div class="pagination">
+            {{#if pagination.hasPrevPage}}
+            
+                <a href="?page={{pagination.prevPage}}"><button style="background-color: #4CAF50;color: white;padding: 10px 20px;font-size: 16px;border: none;border-radius: 5px;transition: background-color 0.3s; "onmouseover="this.style.backgroundColor='#236b26';"onmouseout="this.style.backgroundColor='#4CAF50';">
+    Página Anterior
+</button></a>
+            {{/if}}
+
+            {{#if pagination.hasNextPage}}
+                <a href="?page={{pagination.nextPage}}"><button style="background-color: #4CAF50;color: white;padding: 10px 20px;font-size: 16px;border: none;border-radius: 5px;transition: background-color 0.3s; "onmouseover="this.style.backgroundColor='#236b26';"onmouseout="this.style.backgroundColor='#4CAF50';">Página Siguiente</button></a>
+            {{/if}}
+        </div>
+    {{/if}}
+
+
+    {{#each products}}
+    <div><br><br></div>
+        <div class="product">
+            <h2>{{title}}</h2>
+            <p>Precio: ${{price}}</p>
+            <p>Categoría: {{category}}</p>
+            <p>Descripción: {{description}}</p>
+
+            <!-- Opción 1: Enlace a una nueva vista con detalles -->
+            <a href="/products/{{_id}}">Ver detalles</a>
+
+            <!-- Opción 2: Botón de "Agregar al carrito" directamente -->
+            <button onclick="addToCart('{{_id}}', '{{title}}', {{price}})">Agregar al carrito</button>
+        </div>
+    {{/each}}
+
+   

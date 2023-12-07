@@ -1,0 +1,64 @@
+### PRODUCTS Por query params
+### Solo 5 productos
+GET http://localhost:8080/api/products/?limit=5
+
+### Solo página 2
+GET http://localhost:8080/api/products/?page=2
+
+### Precio de menor a mayor
+GET http://localhost:8080/api/products/?sort=asc
+
+### Precio de mayor a menor
+GET http://localhost:8080/api/products/?sort=desc
+
+
+
+
+### CARTS
+
+### Obtener todos los carritos
+GET http://localhost:8080/api/carts
+
+### GET /api/carts/:cid
+GET http://localhost:8080/api/carts/65713c334da4d91d45672a26
+
+### Nuevo Carrito
+POST http://localhost:8080/api/carts
+
+### Agregar un producto por id al carrito
+POST http://localhost:8080/api/carts/60ad8de49c373a001f1909d3/product/60ad8e1a9c373a001f1909d5
+Content-Type: application/json
+
+{
+  "quantity": 2
+}
+
+### DELETE /api/carts/:cid/products/:pid
+DELETE http://localhost:8080/api/carts/60ad8de49c373a001f1909d3/products/60ad8e1a9c373a001f1909d5
+
+
+### Vaciar el carrito
+DELETE http://localhost:8080/api/carts/65713dd74da4d91d45672a27
+
+### Agregar productos al carrito por esa cantidad
+PUT http://localhost:8080/api/carts/65713dd74da4d91d45672a27
+Content-Type: application/json
+
+{
+  "products": [
+    {
+      "productId": "656809e92d719ce1cd4df433",
+      "quantity": 3
+    }
+  ]
+}
+
+### actualizar SÓLO la cantidad de ejemplares del producto por cualquier cantidad pasada
+PUT http://localhost:8080/api/carts/65713dd74da4d91d45672a27/products/656809e92d719ce1cd4df433
+Content-Type: application/json
+
+{
+  "quantity": 5
+}
+
+

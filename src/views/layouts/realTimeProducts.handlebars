@@ -1,16 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
-    <script src="/js/products.js"></script>
-    <title>Realtime Products</title>
-</head>
-<body>
+
     <h1>Realtime Products</h1>
     <ul>
         {{#each productList}}
             <li>{{this.title}} - Precio: ${{this.price}}</li>
         {{/each}}
     </ul>
-</body>
-</html>
+<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script src="/js/products.js"></script>
+

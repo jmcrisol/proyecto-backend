@@ -1,7 +1,6 @@
 import { Router } from 'express';
-import fs from 'fs';
-import {loadCarts, loadCartsId, newCart, addProductById} from "../controllers/cartsController.js";
-import cartsModel from '../dao/models/carts.model.js';
+import {loadCarts, loadCartsId, newCart, addProductById, removeProductFromCart, updateCartProducts, updateProductQuantity, removeAllProductsFromCart } from "../controllers/cartsController.js";
+
 
 const cartsRouter = Router();
 
@@ -11,6 +10,12 @@ cartsRouter.get('/:cid',loadCartsId);// mostrar los productos en un carrito espe
 cartsRouter.post("/",newCart);// Crear un nuevo carrito
 cartsRouter.post("/:cid/product/:pid",addProductById);
 
+cartsRouter.delete("/:cid/products/:pid", removeProductFromCart);
+cartsRouter.put("/:cid", updateCartProducts);
+cartsRouter.put("/:cid/products/:pid", updateProductQuantity);
+cartsRouter.delete("/:cid", removeAllProductsFromCart);
+
 
 
 export default cartsRouter;
+
