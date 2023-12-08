@@ -11,6 +11,13 @@ import realtimeProducts from './routes/realtimeproducts.router.js';
 import messageModel from './dao/models/messages.model.js';
 import productsListRouter from './routes/productsList.router.js';
 import cartsIdRouter from './routes/cartsId.router.js';
+import session from 'express-session';
+import cookieParser from 'cookie-parser';
+import MongoStore from 'connect-mongo';
+import indexRouter from './routes/views/index.js';
+import loginRouter from './routes/views/login.js';
+import profileRouter from './routes/views/profile.js';
+import sessionsApiRouter from './routes/api/sessions.js';
 
 
 const app = express();
@@ -20,11 +27,25 @@ const io = new Server(httpServer)
 
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.engine('handlebars', handlebars.engine());
 app.set('views', __dirname+'/views');
 app.set('view engine', 'handlebars');
 app.use(express.static(__dirname + '/public'));
 app.use('/', viewRouter);
+
+app.use(session({
+    secret: 'CoderSecret', // Clave secreta para firmar las cookies de sesión
+    resave: false, // Evitar que se guarde la sesión en cada solicitud
+    saveUninitialized: true, // Guardar la sesión incluso si no se ha modificado
+    store: MongoStore.create({
+        mongoUrl:"mongodb+srv://admin:admin@ecommerce.i3p9ffy.mongodb.net/login?retryWrites=true&w=majority",
+
+        ttl: 2 * 60, // Tiempo de vida de la sesión en segundos (2 minutos en este caso)
+    }),
+}));
+
 
 // Conectar los routers a las rutas principales
 app.use('/api/products', productsRouter);
@@ -34,6 +55,12 @@ app.use('/realtimeproducts', realtimeProducts);
 app.use('/chat', chatRouter);
 app.use('/products', productsListRouter);
 app.use('/carts', cartsIdRouter);
+
+app.use('/', indexRouter);
+app.use('/login', loginRouter);
+app.use('/profile', profileRouter);
+app.use('/logout', sessionsApiRouter);
+app.use('/api/sessions', sessionsApiRouter);
 
 
 //Mensaje para cuelquier ruta erronea
@@ -94,3 +121,4 @@ io.on('connection', (socket) => {
 
 
 
+export default app;
