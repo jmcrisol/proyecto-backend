@@ -7,7 +7,10 @@ const cartsColletion = 'carts';
 const cartsSchema = new Schema({
     products:{
         type: Array,
-        default:[]
+        default:[{
+            type: Schema.Types.ObjectId,
+            ref: 'products',
+        }]
     }
 });
 

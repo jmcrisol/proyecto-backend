@@ -20,13 +20,13 @@ GET http://localhost:8080/api/products/?sort=desc
 GET http://localhost:8080/api/carts
 
 ### GET /api/carts/:cid
-GET http://localhost:8080/api/carts/65713c334da4d91d45672a26
+GET http://localhost:8080/api/carts/65713dde4da4d91d45672a28
 
 ### Nuevo Carrito
 POST http://localhost:8080/api/carts
 
 ### Agregar un producto por id al carrito
-POST http://localhost:8080/api/carts/60ad8de49c373a001f1909d3/product/60ad8e1a9c373a001f1909d5
+POST http://localhost:8080/api/carts/65724b09bb90685624d48540/product/656809e92d719ce1cd4df42e
 Content-Type: application/json
 
 {

@@ -35,9 +35,11 @@ export const loadCartsId = async (req, res) => {
 export const renderCartsId = async (req, res) => {
   try {
     const { cid } = req.params; // Obtener el parámetro cid de la URL
-    let carts = await cartsModel.findById(cid);
-  
-
+    let carts = await cartsModel.findById(cid).populate({
+      path: "products",
+      select: "title",
+    }).lean();
+    console.log(JSON.stringify(carts,null,'\t'))
     res.render('layouts/cart', { carts });
    
   } catch (error) {
