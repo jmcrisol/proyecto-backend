@@ -18,6 +18,8 @@ import indexRouter from './routes/views/index.js';
 import loginRouter from './routes/views/login.js';
 import profileRouter from './routes/views/profile.js';
 import sessionsApiRouter from './routes/api/sessions.js';
+import {authToken,generateToken} from './utils.js';
+
 
 
 const app = express();
@@ -55,8 +57,8 @@ app.use('/realtimeproducts', realtimeProducts);
 app.use('/chat', chatRouter);
 app.use('/products', productsListRouter);
 app.use('/carts', cartsIdRouter);
-
-app.use('/', indexRouter);
+app.use('/',viewRouter)
+// app.use('/', indexRouter);
 app.use('/login', loginRouter);
 app.use('/profile', profileRouter);
 app.use('/logout', sessionsApiRouter);
@@ -119,6 +121,42 @@ io.on('connection', (socket) => {
     });
 });
 
+app.get('/register',(req,res)=>{
+    res.render('register');
+})
+
+app.get('/login',(req,res)=>{
+    res.render('login')
+})
+
+
+app.post('/api/register',(req,res)=>{
+    const {name,email,password} = req.body;
+    const exists = users.find(user=>user.email===email);
+    if(exists) return res.status(400).send({status:"error",error:"User already exists"});
+    const user = {
+        name,
+        email,
+        password
+    }
+    users.push(user);
+    const access_token = generateToken(user);
+    res.send({status:"success",access_token});
+
+})
+
+app.post('/api/login',(req,res)=>{
+    const {email,password} = req.body;
+    const user = users.find(user=>user.email===email && user.password === password);
+    console.log(user);
+    if(!user) return res.status(400).send({status:"error",error:"Invalid credentials"});
+    const access_token = generateToken(user);
+    res.send({status:"success",access_token});
+})
+
+app.get('/api/current',authToken,(req,res)=>{
+    res.send({status:"success",payload:req.user})
+})
 
 
 export default app;
