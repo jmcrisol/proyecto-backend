@@ -1,13 +1,19 @@
 import userModel from "../dao/models/user.model.js";
+import { createHash, isValidPassword } from "../utils.js";
 
 // Registra a un nuevo usuario.
 export const registerUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
-    const user = new userModel({ name, email, password });
+    if (!name || !email || !password)
+      return res
+        .status(401)
+        .send({ status: "Error", error: "Incomplete values" });
+
+    const user = new userModel({ name, email, password: createHash(password) });
     await user.save();
-    req.session.name = name;
-    req.session.email = email;
+    delete user.password;
+    req.session.user = user;
     res.redirect("/profile");
   } catch (error) {
     console.log(error);
@@ -19,14 +25,27 @@ export const registerUser = async (req, res) => {
 export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await userModel.findOne({email, password});
-    if (user) {
-      req.session.name = user.name;
-      req.session.email = user.email;
-      res.redirect("/profile");
-    } else {
-      res.redirect("/user");
-    }
+
+    const user = await userModel.findOne(
+      { email },
+      { email: 1, name: 1, password: 1 }
+    );
+
+    if (!user)
+      return res.status(401).send({
+        status: "Error",
+        error: "Usuario y/o contraseña incorrecta 1",
+      });
+
+    if (!isValidPassword(user, password))
+      return res.status(401).send({
+        status: "Error",
+        error: "Usuario y/o contraseña incorrecta 2",
+      });
+
+    delete user.password;
+    req.session.user = user;
+    res.redirect("/profile");
   } catch (error) {
     console.log("Error, credenciales invalidas", error);
     res.redirect("/error");
@@ -53,6 +72,17 @@ export const logOutUser = async (req, res) => {
     }
   } catch (error) {
     console.error("Error al cerrar la sesión", error);
+    res.status(500).send("Error al cerrar la sesión");
+  }
+};
+
+export const recoveryPassword = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    await userModel.updateOne({ email }, { password: createHash(password) });
+    res.redirect("/login");
+  } catch (error) {
+    console.error("Error al recuperar contraseña", error);
     res.status(500).send("Error al cerrar la sesión");
   }
 };

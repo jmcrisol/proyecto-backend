@@ -1,0 +1,21 @@
+<div class="container-fluid">
+  <div class="container">
+    <div class="row">
+      <h2>{{title}}</h2>
+      <form action="{{actionLogin}}" method="post">
+        <input class="col-3" type="email" name="email" placeholder="email">
+        <input class="col-3" type="password" name="password" placeholder="password">
+        <input class="row m-2" type="submit" value="Login" style="background-color: #4CAF50;color: white;padding: 10px 20px;font-size: 16px;border: none;border-radius: 5px;transition: background-color 0.3s; "onmouseover="this.style.backgroundColor='#236b26';"onmouseout="this.style.backgroundColor='#4CAF50';">
+      </form>
+    </div>
+    <div class="row">
+      <h2>{{title_register}}</h2>
+      <form action="{{actionRegister}}" method="post">
+        <input class="col-3" type="text" name="name" placeholder="name">
+        <input class="col-3" type="email" name="email" placeholder="email">
+        <input class="col-3" type="password" name="password" placeholder="password">
+        <input class="row m-2" type="submit" value="Registro" style="background-color: #4CAF50;color: white;padding: 10px 20px;font-size: 16px;border: none;border-radius: 5px;transition: background-color 0.3s; "onmouseover="this.style.backgroundColor='#236b26';"onmouseout="this.style.backgroundColor='#4CAF50';">
+      </form>
+    </div>
+  </div>
+</div>
